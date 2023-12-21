@@ -1,39 +1,35 @@
-mod secrets;
+mod payments;
+mod tokens;
 
-use reqwest;
-use serde::Deserialize;
+use dotenv;
+
 use std::error::Error;
-
-#[derive(Deserialize, Debug)]
-struct ApiResponse {
-    cccharge: Vec<Charge>,
-}
-
-#[derive(Deserialize, Debug)]
-struct Charge {
-    amount: String,
-}
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
-    let account_id = "your_account_id";
-    let access_token = "your_access_token"; // Replace with your access token
+    let client_id = dotenv::var("CLIENT_ID")?;
+    let client_secret = dotenv::var("CLIENT_SECRET")?;
+    let refresh_token = dotenv::var("REFRESH_TOKEN")?;
+    let account_id = dotenv::var("ACCOUNT_ID")?;
 
-    let client = reqwest::Client::new();
-    let res = client
-        .get(format!(
-            "https://api.lightspeedapp.com/API/V3/Account/{}/CCCharge.json",
-            account_id
-        ))
-        .bearer_auth(access_token)
-        .send()
+    let mut total: f64 = 0.0;
+
+    // Await the result of get_access_token
+    let access_token = tokens::get_access_token(&client_id, &client_secret, &refresh_token).await?;
+
+    for payment in payments::get_payments_by_day(account_id, access_token)
         .await?
-        .json::<ApiResponse>()
-        .await?;
+        .payments
+    {
+        println!(
+            "Amount: {}, Type: {}",
+            payment.amount, payment.payment_type_name
+        );
 
-    for charge in res.cccharge {
-        println!("Amount: {}", charge.amount);
+        total += payment.amount.parse::<f64>().unwrap();
     }
+
+    println!("Total: {}", total);
 
     Ok(())
 }
