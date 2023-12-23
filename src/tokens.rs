@@ -41,8 +41,8 @@ pub async fn get_access_token(
         .await?;
 
     println!(
-        "Access token: {}\nExpires in: {}\nToken type: {}\nScope: {}",
-        response.access_token, response.expires_in, response.token_type, response.scope
+        "Access token expires in: {}\nToken type: {}\nScope: {}",
+        response.expires_in, response.token_type, response.scope
     );
 
     Ok(response.access_token)
