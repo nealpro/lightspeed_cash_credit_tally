@@ -28,25 +28,15 @@ pub async fn get_cc_charge(
         .to_string();
 
     let client = reqwest::Client::new();
-    let _url_unused = format!(
+    let url = format!(
         "https://api.lightspeedapp.com/API/V3/Account/{}/CCCharge.json?timeStamp=>,{}T00:00:00-0500",
         account_id, yesterday
     );
 
-    let url = format!(
-        "https://api.lightspeedapp.com/API/V3/Account/{}/CCCharge.json?timeStamp=>,2023-07-01T00:00:00",
-        account_id
-    );
-
-    // let response_text = client
-    //     .get(&url)
-    //     .bearer_auth(access_token)
-    //     .send()
-    //     .await?
-    //     .text()
-    //     .await?;
-
-    // println!("Response text: {}", response_text);
+    // let _url = format!(
+    //     "https://api.lightspeedapp.com/API/V3/Account/{}/CCCharge.json?timeStamp=>,2023-07-01T00:00:00",
+    //     account_id
+    // );
 
     let response = client
         .get(url)

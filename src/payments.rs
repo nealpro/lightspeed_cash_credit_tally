@@ -35,8 +35,6 @@ pub async fn get_payments_by_day(
 ) -> Result<PaymentsResponse, Box<dyn Error>> {
     let today = Utc::now().date_naive();
     let yesterday = Utc::now().date_naive() - Duration::days(1);
-    // let day_before_yesterday = today - Duration::days(2);
-    // let tomorrow = today + Duration::days(1);
 
     let start_date = yesterday.format("%Y-%m-%d-0500").to_string();
     let end_date = today.format("%Y-%m-%d-0500").to_string();

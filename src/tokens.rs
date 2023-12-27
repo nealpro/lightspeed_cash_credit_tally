@@ -15,7 +15,7 @@ struct RefreshTokenRequest {
 #[derive(Deserialize)]
 pub struct AccessTokenResponse {
     pub access_token: String,
-    expires_in: u64,
+    expires_in: u16,
     token_type: String,
     scope: String,
 }
